@@ -1,13 +1,26 @@
 .header {
   height: 46px;
   background-color: var(--panel-bg);
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
-  position: relative;
-  z-index: 100;
-  border-bottom: 1px solid var(--border-color);
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .header-inner {
+    padding: 0 10px;
+  }
 }
 
 .header-left, .header-right {

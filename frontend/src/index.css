@@ -71,6 +71,10 @@ button {
   flex: 1;
   overflow: hidden;
   position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px;
 }
 
 .sidebar {
@@ -94,6 +98,9 @@ button {
 
 /* Responsive Sidebar */
 @media (max-width: 768px) {
+  .main-content-wrapper {
+    padding: 0;
+  }
   .sidebar {
     position: absolute;
     top: 0;
