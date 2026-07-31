@@ -46,7 +46,7 @@ const AudioPlayer = () => {
       
       // Count play if listened for 30 seconds (or half the song if it's very short)
       if (!hasCountedPlay && duration > 0) {
-        const targetTime = Math.min(30, duration / 2);
+        const targetTime = Math.min(15, duration / 2);
         if (time >= targetTime) {
           setHasCountedPlay(true);
           if (currentTrack && currentTrack.id) {

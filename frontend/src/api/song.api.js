@@ -5,14 +5,12 @@ export const songApi = {
     return axiosClient.get('/songs');
   },
   
-  getById: async (id) => {
-    const response = await axiosClient.get(`/songs/${id}`);
-    return response.data;
+  getById: (id) => {
+    return axiosClient.get(`/songs/${id}`);
   },
 
-  recordPlay: async (id) => {
-    const response = await axiosClient.post(`/songs/${id}/play`);
-    return response.data;
+  recordPlay: (id) => {
+    return axiosClient.post(`/songs/${id}/play`);
   },
   
   upload: (formData) => {
