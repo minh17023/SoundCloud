@@ -1,0 +1,19 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model Song {
+  id         String   @id @default(uuid())
+  title      String
+  artist     String?
+  genre      String?
+  url        String
+  img        String?
+  created_at DateTime @default(now())
+
+  @@map("songs")
+}

@@ -1,0 +1,136 @@
+.audio-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #282828;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
+  gap: 24px;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.control-btn {
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.control-btn:hover {
+  color: var(--text-primary);
+}
+
+.play-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  color: #282828;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-btn:hover {
+  transform: scale(1.05);
+}
+
+.player-timeline {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.time {
+  font-size: 11px;
+  color: var(--text-secondary);
+  min-width: 30px;
+}
+
+.progress-bar-container {
+  flex: 1;
+  height: 4px;
+  background-color: #404040;
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--accent-color);
+  border-radius: 2px;
+}
+
+.progress-bar-container:hover .progress-bar {
+  background-color: #ff6600;
+}
+
+.player-track-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 250px;
+}
+
+.track-cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.track-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-artist {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.track-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.player-volume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 120px;
+  color: var(--text-secondary);
+}
+
+.volume-bar-container {
+  flex: 1;
+  height: 4px;
+  background-color: #404040;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.volume-bar {
+  height: 100%;
+  background-color: var(--text-secondary);
+  border-radius: 2px;
+}
+
+.player-volume:hover {
+  color: var(--text-primary);
+}
+
+.player-volume:hover .volume-bar {
+  background-color: var(--accent-color);
+}
