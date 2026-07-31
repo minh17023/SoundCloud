@@ -1,32 +1,77 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { playlistApi } from '../api/playlist.api';
+import useStore from '../store';
 import './Sidebar.css';
 
-const Sidebar = () => {
+const Sidebar = ({ user }) => {
+  const isSidebarOpen = useStore(state => state.isSidebarOpen);
+  const [playlists, setPlaylists] = useState([]);
+  const [isCreating, setIsCreating] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+
+  const fetchPlaylists = async () => {
+    if (!user) return;
+    try {
+      const data = await playlistApi.getUserPlaylists();
+      setPlaylists(data);
+    } catch (error) {
+      console.error('Error fetching playlists', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlaylists();
+  }, [user]);
+
+  const handleCreatePlaylist = async () => {
+    if (!newTitle.trim()) return;
+    try {
+      await playlistApi.create(newTitle, null);
+      setNewTitle('');
+      setIsCreating(false);
+      fetchPlaylists(); // Refresh list
+    } catch (error) {
+      alert('Error creating playlist');
+    }
+  };
+
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isSidebarOpen ? 'mobile-open' : ''}`}>
       <div className="sidebar-section">
-        <h3 className="sidebar-title">ARTIST TOOLS</h3>
-        <div className="tools-grid">
-          <div className="tool-item">
-            <span className="tool-icon">⚡</span>
-            Amplify
-          </div>
-          <div className="tool-item">
-            <span className="tool-icon">🔄</span>
-            Replace
-          </div>
-          <div className="tool-item">
-            <span className="tool-icon">🌐</span>
-            Distribute
-          </div>
-          <div className="tool-item">
-            <span className="tool-icon">🎛️</span>
-            Master
-          </div>
-        </div>
-        <div className="unlock-pro">
-          <span className="unlock-icon">+</span>
-          Unlock Artist tools from ₫40,000/month.
+        <h3 className="sidebar-title">YOUR PLAYLISTS</h3>
+        <div className="playlists-list">
+          {user ? (
+            <>
+              {playlists.map(pl => (
+                <Link to={`/playlist/${pl.id}`} key={pl.id} className="playlist-item" style={{display:'block', padding:'5px 0', color:'#ccc', textDecoration:'none'}}>
+                  🎵 {pl.title}
+                </Link>
+              ))}
+              
+              {!isCreating ? (
+                <button onClick={() => setIsCreating(true)} className="btn btn-secondary" style={{marginTop:'10px', width:'100%', padding:'5px'}}>
+                  + New Playlist
+                </button>
+              ) : (
+                <div style={{marginTop:'10px'}}>
+                  <input 
+                    type="text" 
+                    value={newTitle} 
+                    onChange={e => setNewTitle(e.target.value)} 
+                    placeholder="Playlist name..."
+                    style={{width:'100%', marginBottom:'5px', padding:'5px'}}
+                  />
+                  <div style={{display:'flex', gap:'5px'}}>
+                    <button onClick={handleCreatePlaylist} className="btn btn-primary" style={{flex:1, padding:'5px'}}>Save</button>
+                    <button onClick={() => setIsCreating(false)} className="btn btn-secondary" style={{flex:1, padding:'5px'}}>Cancel</button>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <p style={{color:'#777'}}>Please login to see your playlists.</p>
+          )}
         </div>
       </div>
 
@@ -53,19 +98,6 @@ const Sidebar = () => {
               <button className="follow-btn">Follow</button>
             </div>
           ))}
-        </div>
-      </div>
-
-      <div className="sidebar-footer">
-        <div className="mobile-apps">
-          <h4>GO MOBILE</h4>
-          <div className="app-buttons">
-            <button className="store-btn">App Store</button>
-            <button className="store-btn">Google Play</button>
-          </div>
-        </div>
-        <div className="footer-links">
-          Legal - Privacy - Cookie Policy - Imprint - Artist Resources - Newsroom
         </div>
       </div>
     </aside>

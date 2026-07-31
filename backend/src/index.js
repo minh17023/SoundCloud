@@ -10,6 +10,7 @@ import './models/playlist.model.js';
 import songRoutes from './routes/song.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import interactionRoutes from './routes/interaction.routes.js';
+import playlistRoutes from './routes/playlist.routes.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/songs', songRoutes);
 app.use('/api/interactions', interactionRoutes);
+app.use('/api/playlists', playlistRoutes);
 
 // Test Sequelize connection and sync DB
 const testDbConnection = async () => {

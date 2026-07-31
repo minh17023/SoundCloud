@@ -42,3 +42,14 @@ export const getSongById = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const recordPlay = async (req, res) => {
+  try {
+    const song = await songService.incrementListens(req.params.id);
+    if (!song) return res.status(404).json({ error: 'Song not found' });
+    res.json({ message: 'Play counted', listens: song.listens });
+  } catch (err) {
+    console.error('Controller Error recording play:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

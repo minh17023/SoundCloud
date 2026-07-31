@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Upload from './pages/Upload';
 import Login from './pages/Login';
 import SongDetails from './pages/SongDetails';
+import PlaylistDetails from './pages/PlaylistDetails';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import AudioPlayer from './components/AudioPlayer';
@@ -42,12 +43,13 @@ function App() {
       <div className="app-container">
         <Header user={user} onLogout={handleLogout} />
         <div className="main-content-wrapper">
-          <Sidebar />
+          <Sidebar user={user} />
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/upload" element={<Upload />} />
               <Route path="/song/:id" element={<SongDetails user={user} />} />
+              <Route path="/playlist/:id" element={<PlaylistDetails user={user} />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>

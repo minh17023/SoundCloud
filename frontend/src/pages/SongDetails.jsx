@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { songApi } from '../api/song.api';
 import { interactionApi } from '../api/interaction.api';
+import { playlistApi } from '../api/playlist.api';
 import useStore from '../store';
-import { Play, Heart, MessageSquare } from 'lucide-react';
+import { Play, Heart, MessageSquare, Plus } from 'lucide-react';
 import './SongDetails.css';
 
 const SongDetails = ({ user }) => {
@@ -12,6 +13,10 @@ const SongDetails = ({ user }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
+  
+  // Playlist state
+  const [showPlaylists, setShowPlaylists] = useState(false);
+  const [userPlaylists, setUserPlaylists] = useState([]);
   
   const currentTrack = useStore(state => state.currentTrack);
   const isPlaying = useStore(state => state.isPlaying);
@@ -27,6 +32,11 @@ const SongDetails = ({ user }) => {
         ]);
         setSong(songData);
         setComments(commentsData);
+        
+        if (user) {
+          const plData = await playlistApi.getUserPlaylists();
+          setUserPlaylists(plData);
+        }
       } catch (error) {
         console.error('Error fetching song details', error);
       } finally {
@@ -34,7 +44,7 @@ const SongDetails = ({ user }) => {
       }
     };
     fetchData();
-  }, [id]);
+  }, [id, user]);
 
   if (loading) return <div style={{ color: 'white' }}>Loading details...</div>;
   if (!song) return <div style={{ color: 'white' }}>Song not found.</div>;
@@ -58,7 +68,6 @@ const SongDetails = ({ user }) => {
     if (!user) return alert('Please login to like this song.');
     try {
       await interactionApi.toggleLike(song.id);
-      // Very simple local update (in a real app we'd fetch the updated count from the server)
       setSong({ ...song, listens: (song.listens || 0) + 1 }); 
       alert('Toggled Like!');
     } catch (error) {
@@ -77,6 +86,16 @@ const SongDetails = ({ user }) => {
       setNewComment('');
     } catch (error) {
       alert('Error adding comment');
+    }
+  };
+
+  const handleAddToPlaylist = async (playlistId) => {
+    try {
+      await playlistApi.addSong(playlistId, song.id);
+      alert('Added to playlist successfully!');
+      setShowPlaylists(false);
+    } catch (error) {
+      alert(error.response?.data?.error || 'Error adding to playlist');
     }
   };
 
@@ -107,6 +126,31 @@ const SongDetails = ({ user }) => {
           <MessageSquare size={20} />
           <span>{comments.length} Comments</span>
         </button>
+        
+        {user && (
+          <div style={{position: 'relative'}}>
+            <button className="action-btn" onClick={() => setShowPlaylists(!showPlaylists)}>
+              <Plus size={20} />
+              <span>Add to Playlist</span>
+            </button>
+            {showPlaylists && (
+              <div style={{position: 'absolute', top: '100%', left: 0, background: '#222', border: '1px solid #444', borderRadius: '4px', padding: '10px', zIndex: 10, width: '200px'}}>
+                <h4 style={{margin: '0 0 10px 0', fontSize: '14px'}}>Select Playlist</h4>
+                {userPlaylists.length > 0 ? userPlaylists.map(pl => (
+                  <button 
+                    key={pl.id} 
+                    style={{display: 'block', width: '100%', padding: '5px', textAlign: 'left', background: 'transparent', border: 'none', color: '#ccc', cursor: 'pointer'}}
+                    onClick={() => handleAddToPlaylist(pl.id)}
+                  >
+                    {pl.title}
+                  </button>
+                )) : (
+                  <p style={{fontSize: '12px', color: '#888'}}>No playlists found. Create one in the sidebar.</p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="song-details-comments">

@@ -1,12 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Bell, Mail, User, LogOut } from 'lucide-react';
+import { Search, Bell, Mail, User, LogOut, Menu } from 'lucide-react';
+import useStore from '../store';
 import './Header.css';
 
 const Header = ({ user, onLogout }) => {
+  const toggleSidebar = useStore(state => state.toggleSidebar);
+
   return (
     <header className="header">
       <div className="header-left">
+        <button className="mobile-menu-btn" onClick={toggleSidebar}>
+          <Menu size={24} />
+        </button>
         <Link to="/" className="logo">
           <svg viewBox="0 0 100 32" className="logo-svg" width="60" height="32" fill="currentColor">
             {/* Simple cloud-like shape representing soundcloud logo */}
@@ -38,7 +44,8 @@ const Header = ({ user, onLogout }) => {
         
         {user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <span style={{ color: '#ccc', fontSize: '14px' }}>{user.username}</span>
+            <span className="username-text" style={{ color: '#ccc', fontSize: '14px' }}>{user.username}</span>
+            <button className="icon-btn mobile-user-icon"><User size={20} /></button>
             <button className="icon-btn" onClick={onLogout} title="Logout">
               <LogOut size={20} />
             </button>

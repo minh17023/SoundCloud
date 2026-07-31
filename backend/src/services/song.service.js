@@ -64,3 +64,13 @@ export const getSongById = async (id) => {
     ]
   });
 };
+
+export const incrementListens = async (id) => {
+  const song = await Song.findByPk(id);
+  if (song) {
+    song.listens += 1;
+    await song.save();
+    return song;
+  }
+  return null;
+};
