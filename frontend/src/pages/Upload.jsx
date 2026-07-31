@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UploadCloud } from 'lucide-react';
-import axiosClient from '../api/axiosClient';
+import { songApi } from '../api/song.api';
 import './Upload.css';
 
 const Upload = () => {
@@ -42,11 +42,7 @@ const Upload = () => {
     formData.append('genre', genre);
 
     try {
-      await axiosClient.post('/songs', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      await songApi.upload(formData);
       alert('Upload successful!');
       navigate('/');
     } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axiosClient from '../api/axiosClient';
+import { authApi } from '../api/auth.api';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
@@ -17,18 +17,11 @@ const Login = ({ onLogin }) => {
 
     try {
       if (isSignUp) {
-        await axiosClient.post('/auth/register', {
-          email,
-          password,
-          username,
-        });
+        await authApi.register(email, password, username);
         alert('Registration successful! Please sign in.');
         setIsSignUp(false); // Switch to login after register
       } else {
-        const data = await axiosClient.post('/auth/login', {
-          email,
-          password,
-        });
+        const data = await authApi.login(email, password);
         
         // Save token and pass user up to App.jsx
         localStorage.setItem('token', data.token);

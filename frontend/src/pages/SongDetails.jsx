@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axiosClient from '../api/axiosClient';
+import { songApi } from '../api/song.api';
+import { interactionApi } from '../api/interaction.api';
 import useStore from '../store';
 import { Play, Heart, MessageSquare } from 'lucide-react';
 import './SongDetails.css';
@@ -21,8 +22,8 @@ const SongDetails = ({ user }) => {
     const fetchData = async () => {
       try {
         const [songData, commentsData] = await Promise.all([
-          axiosClient.get(`/songs/${id}`),
-          axiosClient.get(`/interactions/comment/${id}`)
+          songApi.getById(id),
+          interactionApi.getComments(id)
         ]);
         setSong(songData);
         setComments(commentsData);
@@ -56,7 +57,7 @@ const SongDetails = ({ user }) => {
   const handleLike = async () => {
     if (!user) return alert('Please login to like this song.');
     try {
-      await axiosClient.post('/interactions/like', { songId: song.id });
+      await interactionApi.toggleLike(song.id);
       // Very simple local update (in a real app we'd fetch the updated count from the server)
       setSong({ ...song, listens: (song.listens || 0) + 1 }); 
       alert('Toggled Like!');
@@ -71,11 +72,7 @@ const SongDetails = ({ user }) => {
     if (!user) return alert('Please login to comment.');
 
     try {
-      const commentData = await axiosClient.post('/interactions/comment', {
-        songId: song.id,
-        content: newComment,
-        timestamp: 0 // Mock timestamp for now
-      });
+      const commentData = await interactionApi.addComment(song.id, newComment, 0);
       setComments([...comments, commentData]);
       setNewComment('');
     } catch (error) {

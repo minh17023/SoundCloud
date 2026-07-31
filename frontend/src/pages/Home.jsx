@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axiosClient from '../api/axiosClient';
+import { songApi } from '../api/song.api';
 import useStore from '../store';
 import './Home.css';
 
@@ -12,7 +12,7 @@ const Home = () => {
   useEffect(() => {
     const fetchSongs = async () => {
       try {
-        const data = await axiosClient.get('/songs');
+        const data = await songApi.getAll();
         if (data && data.length > 0) {
           setSongs(data);
         } else {
